@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 use App\Controllers\ArticleController;
 use App\Controllers\CategoryController;
-use App\Controllers\ErrorController;
 use App\Controllers\HomeController;
 use App\Core\Router;
+use App\Core\SmartyFactory;
 
 define('ROOT_DIR', dirname(__DIR__));
 
@@ -31,5 +31,9 @@ $router->add('GET', '/category/{slug}', CategoryController::class, 'show');
 $router->add('GET', '/article/{slug}', ArticleController::class, 'show');
 
 if (!$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'])) {
-    (new ErrorController())->show404();
+    http_response_code(404);
+    $smarty = SmartyFactory::create();
+    $smarty->assign('currentYear', date('Y'));
+    $smarty->assign('title', 'Страница не найдена');
+    $smarty->display('pages/404.tpl');
 }

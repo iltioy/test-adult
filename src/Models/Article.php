@@ -31,7 +31,10 @@ class Article
         int $page,
         int $perPage
     ): array {
-        $orderBy = $sort === 'views' ? 'a.views DESC' : 'a.published_at DESC';
+        $orderBy = match($sort) {
+            'views' => 'a.views DESC',
+            default => 'a.published_at DESC',
+        };
         $offset = ($page - 1) * $perPage;
 
         $stmt = Database::getInstance()->prepare("
@@ -79,28 +82,24 @@ class Article
 
         $placeholders = implode(',', array_fill(0, count($categoryIds), '?'));
 
-        $idStmt = Database::getInstance()->prepare("
-            SELECT DISTINCT a.id
+        $stmt = Database::getInstance()->prepare("
+            SELECT DISTINCT a.*
             FROM   articles a
             JOIN   article_categories ac ON ac.article_id = a.id
             WHERE  ac.category_id IN ({$placeholders})
               AND  a.id != ?
+            ORDER  BY RAND()
+            LIMIT  ?
         ");
-        $idStmt->execute([...$categoryIds, $articleId]);
-        $ids = $idStmt->fetchAll(PDO::FETCH_COLUMN);
 
-        if (empty($ids)) {
-            return [];
+        $pos = 1;
+        foreach ($categoryIds as $id) {
+            $stmt->bindValue($pos++, $id, PDO::PARAM_INT);
         }
+        $stmt->bindValue($pos++, $articleId, PDO::PARAM_INT);
+        $stmt->bindValue($pos, $limit, PDO::PARAM_INT);
+        $stmt->execute();
 
-        shuffle($ids);
-        $ids = array_slice($ids, 0, $limit);
-
-        $placeholders2 = implode(',', array_fill(0, count($ids), '?'));
-        $stmt = Database::getInstance()->prepare(
-            "SELECT * FROM articles WHERE id IN ({$placeholders2})"
-        );
-        $stmt->execute($ids);
         return $stmt->fetchAll();
     }
 }

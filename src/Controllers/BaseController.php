@@ -19,10 +19,7 @@ abstract class BaseController
     {
         $this->smarty->assign('currentYear', date('Y'));
 
-        foreach ($vars as $key => $value) {
-            $this->smarty->assign($key, $value);
-        }
-
+        $this->smarty->assign($vars);
         $this->smarty->display($template);
     }
 

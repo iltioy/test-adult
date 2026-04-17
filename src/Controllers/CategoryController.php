@@ -21,9 +21,8 @@ class CategoryController extends BaseController
             return;
         }
 
-        $sort = in_array($_GET['sort'] ?? '', self::VALID_SORTS, true)
-            ? $_GET['sort']
-            : 'date';
+        $rawSort = $_GET['sort'] ?? '';
+        $sort = in_array($rawSort, self::VALID_SORTS, true) ? $rawSort : 'date';
 
         $total = Article::countByCategory($category['id']);
         $totalPages = max(1, (int) ceil($total / self::PER_PAGE));
