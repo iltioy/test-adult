@@ -1,0 +1,8 @@
+vendor/
+storage/smarty/compile/*
+storage/smarty/cache/*
+public/assets/css/main.css
+!storage/smarty/compile/.gitkeep
+!storage/smarty/cache/.gitkeep
+!public/assets/css/.gitkeep
+.env

@@ -1,0 +1,63 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: $font-family;
+    font-size: 16px;
+    line-height: $line-height;
+    color: $color-text;
+    background: $color-bg;
+}
+
+.container {
+    max-width: $container;
+    margin: 0 auto;
+    padding: 0 $gap;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+
+.header {
+    background: $color-white;
+    border-bottom: 1px solid $color-border;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    &__logo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $color-primary;
+        text-decoration: none;
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+}
+
+// ─── Main ────────────────────────────────────────────────────────────────────
+
+.main {
+    padding: 2.5rem 0;
+    min-height: calc(100vh - 112px);
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+
+.footer {
+    background: $color-white;
+    border-top: 1px solid $color-border;
+    padding: 1.25rem 0;
+    text-align: center;
+
+    &__text {
+        color: $color-muted;
+        font-size: 0.875rem;
+    }
+}
